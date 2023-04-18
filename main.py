@@ -1,11 +1,6 @@
+#!/usr/bin/env python3
+
 # Bitlair HobbyBot
-#
-# Requirements:
-# - pytz
-# - python3
-# - discord_webhook
-# - paho-mqtt
-# - discord.py
 
 from time import sleep
 from string import Template
@@ -16,9 +11,10 @@ import datetime
 import pytz
 import paho.mqtt.client as mqtt
 import paho.mqtt.subscribe as subscribe
+import os
 
 # hunter2
-token = ""
+token = os.getenv('DISCORD_TOKEN')
 webhook_url = ""
 description = 'Bitlair Bot'
 state_template = Template('$topic is now $state')
@@ -29,6 +25,7 @@ intents = Intents.default()
 intents.message_content = True
 intents.members = True
 HobbyBot = commands.Bot(command_prefix='!', description=description, intents=intents)
+
 
 # Define bot commands
 @HobbyBot.event

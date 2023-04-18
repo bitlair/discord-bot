@@ -1,0 +1,4 @@
+discord.py
+discord_webhook
+paho-mqtt
+pytz
