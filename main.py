@@ -13,9 +13,9 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.subscribe as subscribe
 import os
 
-# hunter2
+
 token = os.getenv('DISCORD_TOKEN')
-webhook_url = ""
+webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
 description = 'Bitlair Bot'
 state_template = Template('$topic is now $state')
 timezone = pytz.timezone('Europe/Amsterdam')
