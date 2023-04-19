@@ -36,7 +36,7 @@ async def on_ready():
 @HobbyBot.command(description='Bitlair Space State')
 async def state(ctx):
     async with ctx.typing():
-        spaceState = subscribe.simple("bitlair/state/bitlair", hostname="bitlair.nl").payload.decode()
+        spaceState = subscribe.simple("bitlair/state", hostname="bitlair.nl").payload.decode()
         if spaceState == "open":
             await ctx.send("Bitlair is OPEN! :sunglasses:")
         elif spaceState == "closed":
