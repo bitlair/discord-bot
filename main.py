@@ -96,6 +96,13 @@ async def np(ctx):
 def on_connect(client, userdata, flags, rc):
     client.subscribe("bitlair/state/bitlair")
     client.subscribe("bitlair/state/djo")
+    client.subscribe("bitlair/photos")
+
+
+def webhook_message(msg):
+    webhook = DiscordWebhook(url=webhook_url, rate_limit_retry=True, content=msg)
+    webhook.execute()
+
 
 # post to mqtt discord channel when state changes
 def on_message(client, userdata, msg):
@@ -103,15 +110,19 @@ def on_message(client, userdata, msg):
         topic = msg.topic
         msg = msg.payload.decode()
 
-        state_template = Template('$topic is now $state')
-        if topic == "bitlair/state/bitlair":
-            msg = state_template.substitute(topic='Bitlair', state=msg.upper())
-        elif topic == "bitlair/state/djo":
-            msg = state_template.substitute(topic='DJO', state=msg.upper())
+        if topic == 'bitlair/state/bitlair':
+            webhook_message('Bitlair is now %s' % msg.upper())
+        elif topic == 'bitlair/state/djo':
+            webhook_message('DJO is now %s' % msg.upper())
+        elif topic == 'bitlair/photos':
+            webhook = DiscordWebhook(url=webhook_url, rate_limit_retry=True)
+            embed = DiscordEmbed(title='WIP Cam', color='fc5d1d')
+            embed.set_url('https://bitlair.nl/fotos/view/' + msg)
+            embed.set_image('https://bitlair.nl/fotos/photos/' + msg)
+            webhook.add_embed(embed)
+            webhook.execute()
         else:
             return
-        webhook = DiscordWebhook(url=webhook_url, rate_limit_retry=True, content=msg)
-        webhook.execute()
         sleep(1)  # Prevent triggering rate limits.
     except Exception as e:
         print(e)
