@@ -94,7 +94,7 @@ async def np(ctx):
 #
 # subscribe to topics
 def on_connect(client, userdata, flags, rc):
-    client.subscribe("bitlair/state/bitlair")
+    client.subscribe("bitlair/state")
     client.subscribe("bitlair/state/djo")
     client.subscribe("bitlair/photos")
 
@@ -110,7 +110,7 @@ def on_message(client, userdata, msg):
         topic = msg.topic
         msg = msg.payload.decode()
 
-        if topic == 'bitlair/state/bitlair':
+        if topic == 'bitlair/state':
             webhook_message('Bitlair is now %s' % msg.upper())
         elif topic == 'bitlair/state/djo':
             webhook_message('DJO is now %s' % msg.upper())
