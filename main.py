@@ -104,11 +104,23 @@ def webhook_message(msg):
     webhook.execute()
 
 
+retained = {
+    'bitlair/photos',
+    'bitlair/state',
+    'bitlair/state/djo',
+}
+
 # post to mqtt discord channel when state changes
 def on_message(client, userdata, msg):
     try:
         topic = msg.topic
         msg = msg.payload.decode()
+
+        # Retained messages trigger an initial message on connecting. Prevent relaying them to
+        # Discord on startup.
+        if topic in retained:
+            retained.remove(topic)
+            return
 
         if topic == 'bitlair/state':
             webhook_message('Bitlair is now %s' % msg.upper())
