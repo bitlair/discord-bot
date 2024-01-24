@@ -94,6 +94,7 @@ async def np(ctx):
 #
 # subscribe to topics
 def on_connect(client, userdata, flags, rc):
+    client.subscribe("bitlair/alarm")
     client.subscribe("bitlair/state")
     client.subscribe("bitlair/state/djo")
     client.subscribe("bitlair/photos")
@@ -105,6 +106,7 @@ def webhook_message(msg):
 
 
 retained = {
+    'bitlair/alarm',
     'bitlair/photos',
     'bitlair/state',
     'bitlair/state/djo',
@@ -122,7 +124,9 @@ def on_message(client, userdata, msg):
             retained.remove(topic)
             return
 
-        if topic == 'bitlair/state':
+        if topic == 'bitlair/alarm':
+            webhook_message('Alarm: %s' % msg)
+        elif topic == 'bitlair/state':
             webhook_message('Bitlair is now %s' % msg.upper())
         elif topic == 'bitlair/state/djo':
             webhook_message('DJO is now %s' % msg.upper())
